@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -284,8 +285,8 @@ const CreateItinerary = () => {
                 <Sparkles className="w-5 h-5 text-primary" />
                 Seu Roteiro Personalizado
               </h2>
-              <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap">
-                {itinerary}
+              <div className="prose prose-sm max-w-none text-foreground">
+                <ReactMarkdown>{itinerary}</ReactMarkdown>
               </div>
             </motion.div>
           )}
