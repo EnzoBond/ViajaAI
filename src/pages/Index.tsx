@@ -120,7 +120,7 @@ const Index = () => {
                 className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 text-base"
                 asChild
               >
-                <Link to="/explore">Explorar destinos</Link>
+                <Link to="/explore" className="text-sidebar-primary">Explorar destinos</Link>
               </Button>
             </div>
           </motion.div>
