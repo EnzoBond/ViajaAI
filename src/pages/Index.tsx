@@ -11,7 +11,7 @@ import destNoronha from "@/assets/dest-noronha.jpg";
 import destChapada from "@/assets/dest-chapada.jpg";
 import destGramado from "@/assets/dest-gramado.jpg";
 import destLencois from "@/assets/dest-lencois-new.webp";
-import destSalvador from "@/assets/dest-salvador.jpg";
+import destSalvador from "@/assets/dest-salvador-new.webp";
 import {
   Sparkles,
   MapPin,
