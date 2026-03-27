@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, MapPin } from "lucide-react";
+import { Menu, X, MapPin, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { label: "Início", path: "/" },
@@ -13,6 +14,7 @@ const navLinks = [
 export function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-lg border-b border-border">
@@ -44,12 +46,24 @@ export function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/login">Entrar</Link>
-          </Button>
-          <Button size="sm" className="bg-gradient-hero hover:opacity-90 text-primary-foreground" asChild>
-            <Link to="/create">Criar Roteiro</Link>
-          </Button>
+          {user ? (
+            <>
+              <span className="text-sm text-muted-foreground">{user.email}</span>
+              <Button variant="ghost" size="sm" onClick={signOut}>
+                <LogOut className="w-4 h-4 mr-1" />
+                Sair
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/login">Entrar</Link>
+              </Button>
+              <Button size="sm" className="bg-gradient-hero hover:opacity-90 text-primary-foreground" asChild>
+                <Link to="/create">Criar Roteiro</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         <button
@@ -78,12 +92,21 @@ export function Navbar() {
             </Link>
           ))}
           <div className="pt-2 flex flex-col gap-2">
-            <Button variant="outline" asChild>
-              <Link to="/login" onClick={() => setOpen(false)}>Entrar</Link>
-            </Button>
-            <Button className="bg-gradient-hero text-primary-foreground" asChild>
-              <Link to="/create" onClick={() => setOpen(false)}>Criar Roteiro</Link>
-            </Button>
+            {user ? (
+              <Button variant="outline" onClick={() => { signOut(); setOpen(false); }}>
+                <LogOut className="w-4 h-4 mr-1" />
+                Sair
+              </Button>
+            ) : (
+              <>
+                <Button variant="outline" asChild>
+                  <Link to="/login" onClick={() => setOpen(false)}>Entrar</Link>
+                </Button>
+                <Button className="bg-gradient-hero text-primary-foreground" asChild>
+                  <Link to="/create" onClick={() => setOpen(false)}>Criar Roteiro</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}

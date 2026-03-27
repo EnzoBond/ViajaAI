@@ -1,29 +1,65 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, User, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
 
 const Login = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) navigate("/create");
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: isSignUp ? "Conta criada! 🎉" : "Bem-vindo de volta! 👋",
-      description: isSignUp
-        ? "Sua conta foi criada com sucesso."
-        : "Login realizado com sucesso.",
-    });
+    setLoading(true);
+
+    try {
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: name },
+            emailRedirectTo: window.location.origin,
+          },
+        });
+        if (error) throw error;
+        toast({
+          title: "Conta criada! 🎉",
+          description: "Verifique seu email para confirmar a conta.",
+        });
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast({ title: "Bem-vindo de volta! 👋" });
+        navigate("/create");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,6 +111,7 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="h-12"
+                  required
                 />
               </div>
 
@@ -89,15 +126,24 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="h-12"
+                  required
+                  minLength={6}
                 />
               </div>
 
               <Button
                 type="submit"
+                disabled={loading}
                 className="w-full bg-gradient-hero hover:opacity-90 text-primary-foreground h-12"
               >
-                {isSignUp ? "Criar conta" : "Entrar"}
-                <ArrowRight className="w-4 h-4 ml-2" />
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    {isSignUp ? "Criar conta" : "Entrar"}
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </>
+                )}
               </Button>
             </form>
 
