@@ -7,8 +7,8 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import destRio from "@/assets/dest-rio.jpg";
 import destNoronha from "@/assets/dest-noronha.jpg";
-import destChapada from "@/assets/dest-chapada.jpg";
-import destGramado from "@/assets/dest-gramado.jpg";
+import destChapada from "@/assets/dest-chapada-new.webp";
+import destGramado from "@/assets/dest-gramado-new.webp";
 import destLencois from "@/assets/dest-lencois-new.webp";
 import destSalvador from "@/assets/dest-salvador-new.webp";
 
